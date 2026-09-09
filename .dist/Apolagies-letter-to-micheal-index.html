@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorryy mecheal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ==== GANTI WARNA DI SINI KALAU MAU ==== */
+    --sky-top: #db7093;
+    --sky-bottom: #db7093;
+    --card: #ffffff;
+    --ink: #17395c;
+    --ink-soft: #eaf5ff;
+    --btn: #db7093;
+    --btn-dark: #db7093;
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{ height:100%; margin:0; }
+
+  body{
+    font-family: 'Nunito', sans-serif;
+    color: var(--ink);
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 65%, #2f78c4 100%);
+  }
+
+  /* ---------- dekorasi akuarium ---------- */
+  #ocean{
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .drift{
+    position: absolute;
+    font-size: 26px;
+    opacity: .55;
+    animation-name: sway;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  @keyframes sway{
+    0%   { transform: translate(0,0) rotate(0deg); }
+    50%  { transform: translate(18px,-24px) rotate(4deg); }
+    100% { transform: translate(0,0) rotate(0deg); }
+  }
+  .rise{
+    position: absolute;
+    bottom: -40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    animation-name: bubble-up;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes bubble-up{
+    0%   { transform: translateY(0) translateX(0); opacity: .6; }
+    100% { transform: translateY(-115vh) translateX(20px); opacity: 0; }
+  }
+  .floor{
+    position: fixed;
+    left:0; right:0; bottom:0;
+    height: 90px;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.18), transparent 70%);
+    z-index: 0;
+  }
+
+  /* ---------- layout utama ---------- */
+  .stage{
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+
+  .screen{
+    display: none;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    animation: pop .5s cubic-bezier(.2,.8,.3,1.2);
+  }
+  .screen.active{ display: block; }
+
+  @keyframes pop{
+    from{ opacity:0; transform: translateY(14px) scale(.97); }
+    to{ opacity:1; transform: none; }
+  }
+
+  .bubble-card{
+    width: 168px;
+    height: 168px;
+    margin: 0 auto 26px;
+    background: var(--card);
+    border-radius: 28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size: 76px;
+    box-shadow: 0 18px 34px -12px rgba(15,50,90,0.45);
+  }
+
+  h1{
+    font-family: 'Dancing Script', cursive;
+    font-size: 42px;
+    line-height: 1.1;
+    color: #fff;
+    margin: 0 0 16px;
+    text-shadow: 0 2px 10px rgba(0,40,90,0.25);
+  }
+
+  p.msg{
+    color: var(--ink-soft);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0 0 26px;
+  }
+
+  .btn{
+    border: none;
+    border-radius: 16px;
+    padding: 14px 30px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: #fff;
+    background: var(--btn);
+    box-shadow: 0 10px 22px -8px rgba(10,40,80,0.5);
+    cursor: pointer;
+  }
+  .btn:active{ transform: translateY(1px); }
+
+  .btn-row{
+    position: relative;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    min-height: 56px;
+  }
+
+  #noBtn{
+    background: var(--btn-dark);
+    position: relative;
+    transition: transform .15s ease;
+  }
+  #noBtn.dodging{ position: fixed; }
+
+  .letter-card{
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(6px);
+    border-radius: 20px;
+    padding: 26px 22px;
+    margin-bottom: 24px;
+    text-align: left;
+    color: #fff;
+    font-size: 15.5px;
+    line-height: 1.75;
+    max-height: 46vh;
+    overflow-y: auto;
+  }
+  .letter-card p{ margin: 0 0 14px; }
+  .letter-card p:last-child{ margin-bottom: 0; }
+
+  .tap-hint{
+    margin-top: 22px;
+    color: var(--ink-soft);
+    font-size: 14px;
+    letter-spacing: .02em;
+  }
+
+  @media (max-width: 380px){
+    h1{ font-size: 34px; }
+    .bubble-card{ width: 140px; height: 140px; font-size: 62px; }
+  }
+</style>
+</head>
+<body>
+
+  <div id="ocean"></div>
+  <div class="floor"></div>
+
+  <div class="stage">
+
+   <!-- LAYAR 1: pembuka -->
+<section class="screen active" id="screen-1">
+  <div class="bubble-card" id="tapCard">
+    <img src="eeyore.jpg" alt="Eeyore" style="max-width: 100%; border-radius: 12px;">
+  </div>
+  <div class="tap-hint">Helloo click to open plss</div>
+</section>
+
+<!-- LAYAR 2: permintaan maaf awal -->
+<section class="screen" id="screen-2">
+  <div class="bubble-card">
+    <img src="myphoto.jpeg" alt="Foto Permintaan Maaf" style="max-width: 100%; border-radius: 12px;">
+  </div>
+  <h1>can you pls forgive the person above</h1>
+  <p class="msg">
+    im sorry if what i did hurt you because it was never my intention
+    and i hope you'll forgive me
+  </p>
+  <div class="btn-row">
+    <button class="btn" id="yesBtn1">Yes</button>
+    <button class="btn" id="noBtn">No</button>
+  </div>
+</section>
+<!-- LAYAR 3: sebelum forgive -->
+    <section class="screen" id="screen-3">
+      <div class="bubble-card">
+        <img src="sadeeyor.jpg" alt="Ekspresi Sedih" style="max-width: 100%; border-radius: 12px;">
+      </div>
+      <p class="msg" style="color:#fff; font-size:17px;">
+      i really didnt mean to hurt you with what i said
+      </p>
+      <button class="btn" id="forgiveBtn">forgive mee</button>
+    </section>
+
+    <!-- LAYAR 4: surat personal -->
+    <section class="screen" id="screen-4">
+      <div class="letter-card">
+        <p>im sorry about what i said that hurt you and i really hope you'll forgive me :(</p>
+        <p>
+          even until now i still think about what i said to make you this mad
+          but i promise ill watch what i said in the future so i hope you'll forgive me this ones
+        </p>
+  
+      </div>
+      <button class="btn" id="continueBtn">Lanjut</button>
+    </section>
+
+  <!-- LAYAR 5: penutup -->
+<section class="screen" id="screen-5">
+  <div class="bubble-card">
+    <img src="happyeeyore.jpg" alt="Foto Penutup" style="max-width: 100%; border-radius: 12px;">
+  </div>
+  <p class="msg" style="color:#fff; font-size:17px;">
+    thank you for reading this apolagy letter and if you can
+    pls let me acompany you when you go to jakarta 
+    </p>
+  <button class="btn" id="replayBtn">return</button>
+</section>
+
+  </div>
+
+<script>
+  // ---- dekorasi laut: ikan/bintang mengambang + gelembung ----
+  const ocean = document.getElementById('ocean');
+  const creatures = ['🐟','🐠','🐡','⭐','🐙','🐚'];
+  for(let i=0;i<16;i++){
+    const el = document.createElement('div');
+    el.className = 'drift';
+    el.textContent = creatures[Math.floor(Math.random()*creatures.length)];
+    el.style.left = Math.random()*94 + '%';
+    el.style.top = Math.random()*90 + '%';
+    el.style.animationDuration = (4 + Math.random()*4) + 's';
+    el.style.fontSize = (18 + Math.random()*18) + 'px';
+    ocean.appendChild(el);
+  }
+  for(let i=0;i<14;i++){
+    const b = document.createElement('div');
+    b.className = 'rise';
+    const size = 6 + Math.random()*14;
+    b.style.width = size+'px';
+    b.style.height = size+'px';
+    b.style.left = Math.random()*100 + '%';
+    b.style.animationDuration = (6 + Math.random()*6)+'s';
+    b.style.animationDelay = (Math.random()*6)+'s';
+    ocean.appendChild(b);
+  }
+
+  // ---- navigasi antar layar ----
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  document.getElementById('tapCard').addEventListener('click', () => showScreen('screen-2'));
+  document.getElementById('yesBtn1').addEventListener('click', () => showScreen('screen-3'));
+  document.getElementById('forgiveBtn').addEventListener('click', () => showScreen('screen-4'));
+  document.getElementById('continueBtn').addEventListener('click', () => showScreen('screen-5'));
+  document.getElementById('replayBtn').addEventListener('click', () => showScreen('screen-1'));
+
+  // ---- tombol "Tidak" yang kabur ----
+  const noBtn = document.getElementById('noBtn');
+
+  function dodge(){
+    noBtn.classList.add('dodging');
+    const margin = 60;
+    const x = margin + Math.random() * (window.innerWidth - margin*2 - noBtn.offsetWidth);
+    const y = margin + Math.random() * (window.innerHeight - margin*2 - noBtn.offsetHeight);
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+  }
+
+  noBtn.addEventListener('mouseenter', dodge);
+  noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodge(); }, {passive:false});
+  noBtn.addEventListener('click', (e) => { e.preventDefault(); dodge(); });
+</script>
+
+</body>
+</html>
